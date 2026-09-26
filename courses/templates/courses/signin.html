@@ -7,132 +7,105 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Signup</title>
+    <title>Signin</title>
 
     <style>
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-
             font-family: Arial;
-
             margin: 0;
-
             background: #f4f4f4;
         }
 
         header {
-
             background: #222;
-
             color: white;
-
             padding: 20px;
-
             text-align: center;
         }
 
         header h1 {
-
             margin: 0;
         }
 
         .container {
-
             width: 90%;
-
             max-width: 400px;
-
             margin: 50px auto;
         }
 
         .form-box {
-
             background: white;
-
             padding: 30px;
-
             border-radius: 8px;
-
             box-shadow: 0 2px 8px #ccc;
         }
 
-        .form-box h2 {
-
+        h2 {
             text-align: center;
-
-            margin-top: 0;
         }
 
         label {
-
             display: block;
-
             margin-top: 15px;
-
             margin-bottom: 5px;
         }
 
         input {
-
             width: 100%;
-
-            padding: 10px;
-
-            box-sizing: border-box;
-
+            padding: 11px;
             border: 1px solid #ccc;
-
             border-radius: 5px;
         }
 
         button {
-
             width: 100%;
-
-            padding: 10px;
-
+            padding: 11px;
             margin-top: 20px;
-
             background: #222;
-
             color: white;
-
             border: none;
-
             border-radius: 5px;
-
-            cursor: pointer;
         }
 
         button:hover {
-
             background: #555;
         }
 
-        #message {
-
-            margin-top: 15px;
-
+        .error {
             text-align: center;
+            color: red;
         }
 
         .login-link {
-
             text-align: center;
-
             margin-top: 20px;
         }
 
         .login-link a {
-
             color: #222;
-
             text-decoration: none;
         }
 
-        .login-link a:hover {
+        @media (max-width: 600px) {
 
-            text-decoration: underline;
+            header h1 {
+                font-size: 22px;
+            }
+
+            .container {
+                width: 92%;
+                margin: 30px auto;
+            }
+
+            .form-box {
+                padding: 25px 20px;
+            }
+
         }
 
     </style>
@@ -157,11 +130,25 @@
     <div class="form-box">
 
         <h2>
-            Signup
+            Signin
         </h2>
 
 
-        <form id="signupForm">
+        {% if error %}
+
+            <p class="error">
+                {{ error }}
+            </p>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            action="/signin/"
+        >
+
+            {% csrf_token %}
 
 
             <label>
@@ -170,7 +157,7 @@
 
             <input
                 type="text"
-                id="username"
+                name="username"
                 placeholder="Enter username"
                 required
             >
@@ -182,7 +169,7 @@
 
             <input
                 type="email"
-                id="email"
+                name="email"
                 placeholder="Enter email"
                 required
             >
@@ -194,114 +181,32 @@
 
             <input
                 type="password"
-                id="password"
+                name="password"
                 placeholder="Enter password"
                 required
             >
 
 
             <button type="submit">
-                Signup
+                Signin
             </button>
 
-
         </form>
-
-
-        <p id="message"></p>
 
 
         <div class="login-link">
 
             Already have an account?
 
-            <a
-                href="http://127.0.0.1:5500/courses/templates/courses/login.html"
-            >
+            <a href="/login/">
                 Login
             </a>
 
         </div>
 
-
     </div>
 
 </div>
-
-
-<script>
-
-console.log("JavaScript is working");
-
-document.getElementById("signupForm").addEventListener("submit", function(event) {
-
-    event.preventDefault();
-
-    console.log("Signup form submitted");
-
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    console.log(username);
-    console.log(email);
-    console.log(password);
-
-    fetch("http://127.0.0.1:8000/api/signin-page/", {
-
-        method: "POST",
-
-        headers: {
-            "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-            username: username,
-            email: email,
-            password: password
-        })
-
-    })
-    .then(response => {
-
-        console.log("STATUS:", response.status);
-
-        return response.json();
-
-    })
-    .then(data => {
-
-        console.log("DATA:", data);
-
-        if (data.Message) {
-
-            document.getElementById("message").innerHTML = data.Message;
-
-            setTimeout(function() {
-
-                window.location.href =
-                "http://127.0.0.1:5500/courses/templates/courses/login.html";
-
-            }, 1000);
-
-        }
-
-        else if (data.error) {
-
-            document.getElementById("message").innerHTML = data.error;
-
-        }
-
-    })
-    .catch(error => {
-
-        console.log("ERROR:", error);
-
-    });
-
-});
-
-</script>
 
 
 </body>

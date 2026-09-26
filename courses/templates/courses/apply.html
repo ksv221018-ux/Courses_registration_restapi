@@ -7,7 +7,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Login</title>
+    <title>Course Registration</title>
+
 
     <style>
 
@@ -15,95 +16,204 @@
             box-sizing: border-box;
         }
 
+
         body {
+
             font-family: Arial;
+
             margin: 0;
+
             background: #f4f4f4;
+
         }
+
 
         header {
+
             background: #222;
+
             color: white;
+
             padding: 20px;
+
             text-align: center;
+
         }
+
 
         header h1 {
+
             margin: 0;
+
+            font-size: 28px;
+
         }
+
 
         .container {
+
             width: 90%;
-            max-width: 400px;
-            margin: 50px auto;
+
+            max-width: 500px;
+
+            margin: 40px auto;
+
         }
+
 
         .form-box {
+
             background: white;
+
             padding: 30px;
+
             border-radius: 8px;
+
             box-shadow: 0 2px 8px #ccc;
+
         }
 
-        h2 {
+
+        .form-box h2 {
+
             text-align: center;
+
+            margin-top: 0;
+
         }
+
+
+        .course-details {
+
+            background: #f4f4f4;
+
+            padding: 15px;
+
+            border-radius: 5px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .course-details h3 {
+
+            margin-top: 0;
+
+        }
+
 
         label {
+
             display: block;
+
             margin-top: 15px;
+
             margin-bottom: 5px;
+
         }
 
-        input {
+
+        input,
+        textarea {
+
             width: 100%;
-            padding: 11px;
+
+            padding: 10px;
+
             border: 1px solid #ccc;
+
             border-radius: 5px;
+
+            font-family: Arial;
+
         }
+
+
+        textarea {
+
+            resize: vertical;
+
+            min-height: 80px;
+
+        }
+
 
         button {
+
             width: 100%;
-            padding: 11px;
+
+            padding: 12px;
+
             margin-top: 20px;
+
             background: #222;
+
             color: white;
+
             border: none;
+
             border-radius: 5px;
+
+            cursor: pointer;
+
         }
+
 
         button:hover {
+
             background: #555;
+
         }
 
-        .error {
-            text-align: center;
-            color: red;
-        }
 
-        .signup-link {
+        .back-link {
+
             text-align: center;
+
             margin-top: 20px;
+
         }
 
-        .signup-link a {
+
+        .back-link a {
+
             color: #222;
+
             text-decoration: none;
+
         }
+
+
+        .back-link a:hover {
+
+            text-decoration: underline;
+
+        }
+
 
         @media (max-width: 600px) {
 
             header h1 {
+
                 font-size: 22px;
+
             }
+
 
             .container {
+
                 width: 92%;
-                margin: 30px auto;
+
+                margin: 25px auto;
+
             }
 
+
             .form-box {
+
                 padding: 25px 20px;
+
             }
 
         }
@@ -127,72 +237,113 @@
 
 <div class="container">
 
+
     <div class="form-box">
 
+
         <h2>
-            Login
+            Course Registration
         </h2>
 
 
-        {% if error %}
+        <!-- Course Information -->
 
-            <p class="error">
-                {{ error }}
+        <div class="course-details">
+
+            <h3>
+                {{ course.course_name }}
+            </h3>
+
+            <p>
+                <strong>Duration:</strong>
+                {{ course.duration }}
             </p>
 
-        {% endif %}
+            <p>
+                <strong>Trainer:</strong>
+                {{ course.trainer_name }}
+            </p>
 
+        </div>
+
+
+        <!-- Registration Form -->
 
         <form
             method="POST"
-            action="/login/"
+            action="/apply/{{ course.id }}/"
         >
 
             {% csrf_token %}
 
 
             <label>
-                Username
+                Phone Number
             </label>
 
             <input
-                type="text"
-                name="username"
-                placeholder="Enter username"
+                type="tel"
+                name="phone"
+                placeholder="Enter phone number"
                 required
             >
 
 
             <label>
-                Password
+                Age
             </label>
 
             <input
-                type="password"
-                name="password"
-                placeholder="Enter password"
+                type="number"
+                name="age"
+                placeholder="Enter your age"
+                min="1"
+                required
+            >
+
+
+            <label>
+                Address
+            </label>
+
+            <textarea
+                name="address"
+                placeholder="Enter your address"
+                required
+            ></textarea>
+
+
+            <label>
+                Qualification
+            </label>
+
+            <input
+                type="text"
+                name="qualification"
+                placeholder="Enter your qualification"
                 required
             >
 
 
             <button type="submit">
-                Login
+                Register Course
             </button>
+
 
         </form>
 
 
-        <div class="signup-link">
+        <div class="back-link">
 
-            Don't have an account?
-
-            <a href="/signin/">
-                Signup
+            <a href="/">
+                Back to Courses
             </a>
 
         </div>
 
+
     </div>
+
 
 </div>
 

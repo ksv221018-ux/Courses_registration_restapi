@@ -1,17 +1,29 @@
-
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
+
     <title>Course Registration</title>
+
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
 
         body {
             font-family: Arial;
             margin: 0;
             background: #f4f4f4;
         }
+
+
+        /* Header */
 
         header {
             background: #222;
@@ -21,14 +33,18 @@
             position: relative;
         }
 
+
         header h1 {
             margin: 0;
         }
 
+
+        /* Top right navigation */
+
         nav {
             position: absolute;
-            right: 20px;
-            top: 25px;
+            top: 20px;
+            right: 25px;
         }
 
 
@@ -43,70 +59,111 @@
             text-decoration: underline;
         }
 
+
+        /* Main container */
+
         .container {
             width: 90%;
             max-width: 1000px;
-            margin: 30px auto;
+            margin: 40px auto;
         }
+
+
+        .container h2 {
+            text-align: center;
+        }
+
+
+        /* Courses */
 
         .courses {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
+            justify-content: center;
         }
+
 
         .course {
             background: white;
-            padding: 20px;
-            width: 250px;
+            width: 280px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 8px #ccc;
         }
 
 
-        .course h2 {
+        .course h3 {
             margin-top: 0;
         }
 
-        button {
+
+        .course p {
+            color: #555;
+        }
+
+
+        /* Register button */
+
+        .btn {
+            display: inline-block;
             padding: 10px 15px;
             background: #222;
             color: white;
-            border: none;
+            text-decoration: none;
             border-radius: 5px;
-            cursor: pointer;
         }
 
 
-        button:hover {
+        .btn:hover {
             background: #555;
         }
+
+
+        /* Mobile */
 
         @media (max-width: 600px) {
 
             header {
-                position: static;
+                padding: 18px 10px 55px;
+            }
+
+
+            header h1 {
+                font-size: 22px;
             }
 
 
             nav {
-                position: static;
-                margin-top: 15px;
+                position: absolute;
+                top: auto;
+                bottom: 15px;
+                left: 0;
+                right: 0;
+                text-align: center;
             }
 
 
             nav a {
-                margin: 0 8px;
+                margin: 0 10px;
+                font-size: 14px;
+            }
+
+
+            .container {
+                width: 92%;
             }
 
 
             .courses {
                 flex-direction: column;
+                align-items: center;
             }
 
 
             .course {
-                width: auto;
+                width: 100%;
+                max-width: 350px;
             }
 
         }
@@ -118,139 +175,97 @@
 
 <body>
 
-    <header>
 
-        <h1>
-            Course Registration System
-        </h1>
+<header>
+
+    <h1>
+        Course Registration System
+    </h1>
 
 
-        <nav>
+    <nav>
 
-            <a href="login.html">
+        {% if user.is_authenticated %}
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        {% else %}
+
+            <a href="/signin/">
+                Signin
+            </a>
+
+            <a href="/login/">
                 Login
             </a>
 
+        {% endif %}
 
-            <a href="siginup.html">
-                Signup
-            </a>
+    </nav>
 
-        </nav>
+</header>
 
-    </header>
 
-    <div class="container">
+<div class="container">
 
-        <h2>
-            Available Courses
-        </h2>
+    <h2>
+        Available Courses
+    </h2>
 
-        <div
-            id="courses"
-            class="courses"
-        >
+
+    <div class="courses">
+
+
+        {% for course in courses %}
+
+
+            <div class="course">
+
+                <h3>
+                    {{ course.course_name }}
+                </h3>
+
+
+                <p>
+                    Duration:
+                    {{ course.duration }}
+                </p>
+
+
+                <p>
+                    Trainer:
+                    {{ course.trainer_name }}
+                </p>
+
+
+                <a
+                    href="/apply/{{ course.id }}/"
+                    class="btn"
+                >
+                    Register
+                </a>
+
+            </div>
+
+
+        {% empty %}
+
 
             <p>
-                Loading courses...
+                No courses available.
             </p>
 
-        </div>
+
+        {% endfor %}
+
 
     </div>
 
-
-
-    <script>
-
-        function loadCourses() {
-
-
-            fetch(
-                "http://127.0.0.1:8000/api/home/"
-            )
-
-
-            .then(response => response.json())
-
-
-            .then(data => {
-
-
-                const courses =
-                    document.getElementById("courses");
-
-
-                courses.innerHTML = "";
-
-
-                data.forEach(course => {
-
-
-                    courses.innerHTML += `
-
-                        <div class="course">
-
-                            <h2>
-                                ${course.course_name}
-                            </h2>
-
-
-                            <p>
-                                Duration:
-                                ${course.duration}
-                            </p>
-
-
-                            <p>
-                                Trainer:
-                                ${course.trainer_name}
-                            </p>
-
-
-                            <button
-                                onclick="registerCourse(${course.id})"
-                            >
-                                Register
-                            </button>
-
-                        </div>
-
-                    `;
-
-                });
-
-            })
-
-
-            .catch(error => {
-
-
-                console.log(error);
-
-
-                document.getElementById("courses").innerHTML =
-                    "<p>Unable to load courses.</p>";
-
-            });
-
-        }
-
-        function registerCourse(courseId) {
-
-
-            window.location.href =
-                "register.html?id=" + courseId;
-
-        }
-
-        loadCourses();
-
-
-    </script>
+</div>
 
 
 </body>
 
 </html>
-
