@@ -5,9 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def home(request):
-
     courses = Course.objects.all()
-
     return render(
         request,
         'courses/index.html',
@@ -23,7 +21,6 @@ def apply_course(request, id):
 
     try:
         course = Course.objects.get(id=id)
-
     except Course.DoesNotExist:
         return render(
             request,
@@ -64,14 +61,10 @@ def register_user(request):
     if request.method == 'POST':
 
         username = request.POST.get('username')
-
         email = request.POST.get('email')
-
         password = request.POST.get('password')
-
-
+        
         if not username or not password:
-
             return render(
                 request,
                 'courses/signin.html',
@@ -82,7 +75,6 @@ def register_user(request):
 
 
         if User.objects.filter(username=username).exists():
-
             return render(
                 request,
                 'courses/signin.html',
@@ -97,11 +89,9 @@ def register_user(request):
             email=email,
             password=password
         )
-
-
+        
         return redirect('login')
-
-
+    
     return render(
         request,
         'courses/signin.html'
@@ -113,10 +103,8 @@ def user_login(request):
     if request.method == 'POST':
 
         username = request.POST.get('username')
-
         password = request.POST.get('password')
-
-
+        
         user = authenticate(
             request,
             username=username,
@@ -125,12 +113,9 @@ def user_login(request):
 
 
         if user is not None:
-
             login(request, user)
-
             return redirect('home')
-
-
+        
         return render(
             request,
             'courses/login.html',
@@ -138,8 +123,6 @@ def user_login(request):
                 'error': 'Invalid Username or Password'
             }
         )
-
-
     return render(
         request,
         'courses/login.html'
@@ -147,9 +130,7 @@ def user_login(request):
 
 
 def logout_user(request):
-
     logout(request)
-
     return redirect('login')
 
 
