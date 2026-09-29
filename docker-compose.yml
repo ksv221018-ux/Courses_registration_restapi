@@ -1,0 +1,38 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: course-mysql
+
+    environment:
+      MYSQL_DATABASE: courses_registration
+      MYSQL_ROOT_PASSWORD: root
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+
+  web:
+    build: .
+    container_name: course-django
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    command: python manage.py runserver 0.0.0.0:8000
+
+
+volumes:
+  mysql_data:
